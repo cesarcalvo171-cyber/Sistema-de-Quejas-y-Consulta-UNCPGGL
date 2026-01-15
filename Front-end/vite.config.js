@@ -4,6 +4,7 @@ import path from "node:path";
 
 export default defineConfig({
   plugins: [react()],
+    base: "/Sistema-de-Quejas-y-Consulta-UNCPGGL/",
   resolve: {
     alias: {
       // eslint-disable-next-line no-undef
