@@ -2,7 +2,8 @@
 export function Hero(){
     return(
         <>
-          <div className="w-full bg-slate-100/25 border-b">
+       
+         <div className="w-full bg-slate-100/25 flex items-center">
           <div className="max-w-7xl mx-auto px-6 py-7 flex flex-col md:flex-row items-center justify-between gap-8">
         
             {/* TEXTO */}
@@ -11,8 +12,8 @@ export function Hero(){
                 Servicio de
               </p>
         
-              <h1 className="mt-2 text-3xl md:text-4xl font-semibold leading-tight text-red-600">
-                Quejas y <span className="text-red-600">Sugerencias</span>
+              <h1 className="mt-2 text-3xl md:text-4xl font-semibold leading-tight text-red-900">
+                Quejas y <span className="text-red-900">Sugerencias</span>
               </h1>
         
               <p className="mt-4 text-gray-600 text-base">

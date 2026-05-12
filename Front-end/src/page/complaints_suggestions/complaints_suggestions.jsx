@@ -1,10 +1,10 @@
 
-import {  Complaints_suggestions } from "@/Layout/complaints_suggestions";
-export function ComplaintsSuggestions() {
+import {  Inicio } from "@/Layout/Publicos/Inicio";
+export function InicioPg() {
   return (
     <>
       
-      <Complaints_suggestions />
+      <Inicio/>
 
     </>
   );

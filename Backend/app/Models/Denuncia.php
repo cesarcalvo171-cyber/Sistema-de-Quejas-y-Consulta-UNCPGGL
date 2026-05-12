@@ -27,7 +27,32 @@ class Denuncia extends Model
         'Documentos',
         'Imagenes',
         'Video',
-        'numeroRegistro',
+        'numeroregistro',
         'estado',
-    ];
+];
+
+    public function evidencias()
+    {
+        return $this->hasMany(Evidencia::class);
+    }
+
+    public function evaluacion()
+    {
+        return $this->hasOne(EvaluacionPreliminar::class);
+    }
+
+    public function investigacion()
+    {
+        return $this->hasOne(Investigacion::class);
+    }
+
+    public function resolucion()
+    {
+        return $this->hasOne(Resolucion::class);
+    }
+
+    public function seguimiento()
+    {
+        return $this->hasOne(Seguimiento::class);
+    }
 }

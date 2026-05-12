@@ -2,64 +2,86 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DenunciaRequest;
+use App\Http\Services\DenunciaService;
 use App\Models\Denuncia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class DenunciaController extends Controller
 {
-     public function index()
+    protected DenunciaService $service;
+
+    public function __construct()
     {
-        return Denuncia::all();
+        $this->service = new DenunciaService();
     }
-    public function store(Request $request)
+
+    public function store(DenunciaRequest $request)
     {
-        $data = $request->validate([
-            'Nombre_Completo' => 'required|string|max:100',
-            'R_universitaria' => 'required|string',
-            'Area' => 'required|string',
-            'Telefono' => 'required|string',
-            'Correo' => 'required|email',
-            'Medio_Recepcion' => 'required|string',
-            'Tipo_denuncia' => 'required|string',
-            'Descripcion' => 'required|string',
-            'fecha' => 'required|date',
-            'persona_involucrada' => 'required|string',
+        $data= $request->validated();
 
-            'Documentos' => 'nullable|file|mimes:pdf|max:5120',
-            'Imagenes' => 'nullable|image|max:5120',
-            'Video' => 'nullable|file|mimes:mp4,webm|max:51200',
-        ]);
-
-        if ($request->hasFile('Documentos')) {
-            $data['Documentos'] = $request->file('Documentos')
-                ->store('denuncias/documentos', 'public');
-        }
-
-        if ($request->hasFile('Imagenes')) {
-            $data['Imagenes'] = $request->file('Imagenes')
-                ->store('denuncias/imagenes', 'public');
-        }
-
-        if ($request->hasFile('Video')) {
-            $data['Video'] = $request->file('Video')
-                ->store('denuncias/videos', 'public');
-        }
-
-      $correlativo = DB::selectOne(
-    "SELECT nextval('quejas.seq_numero_queja') AS num"
-)->num;
-
-$data['numeroRegistro'] = 'SQC-' 
-    . str_pad($correlativo, 5, '0', STR_PAD_LEFT) 
-    . '-UNCPGGL';
+        $data['numeroregistro'] = $this->service->crearNumeroRegistro();
         $data['estado'] = 'Pendiente';
 
-        Denuncia::create($data);
+        //  IMPORTANTE: quitamos archivos del array
+        unset($data['Documentos'], $data['Imagenes'], $data['Video']);
+
+        //  Crear denuncia primero
+        //$denuncia = Denuncia::create($data);
+
+        //  Ahora sí guardamos evidencias
+        foreach (['Documentos', 'Imagenes', 'Video'] as $tipo) {
+            if ($request->hasFile($tipo)) {
+                $ruta = $request->file($tipo)->store("denuncias/$tipo", 'public');
+
+                DB::table('quejas.evidencias')->insert([
+                    'denuncia_id' => $denuncia->id,
+                    'tipo' => strtolower($tipo),
+                    'ruta' => $ruta,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
 
         return response()->json([
             'message' => 'Denuncia registrada correctamente',
             'numeroRegistro' => $data['numeroRegistro'],
-        ], 201);
+        ], 200);
+    }
+    public function denunciasParaRevisor()
+    {
+        $denuncias = Denuncia::where('estado', 'Pendiente')
+            ->select(
+                'id',
+                'numeroRegistro',
+                'Nombre_Completo',
+                'Tipo_denuncia',
+                'estado'
+            )
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($denuncias);
+    }
+    public function detalleDenuncia($id)
+    {
+        $denuncia = Denuncia::with('evidencias')
+            ->findOrFail($id);
+
+        return response()->json($denuncia);
+    }
+    public function show($id)
+    {
+        $d = Denuncia::findOrFail($id);
+
+        return response()->json([
+            'id' => $d->id,
+            'numeroRegistro' => $d->numeroRegistro,
+            'fecha' => $d->fecha,
+        ]);
     }
 }
