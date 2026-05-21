@@ -7,6 +7,9 @@ import { FCD_01pg } from "@/page/FORMULARIO/FDC-001pg";
 import { Inicio_RVpg } from "@/page/Revisor/Revisor";
 import { Tabla_BuzonPg } from "@/page/Revisor/Tabla_BuzonPg";
 import { FCD_03pg } from "@/page/FORMULARIO/formulario3";
+import { FCD_02pg } from "@/page/Revisor/FCD_02pg";
+import { FCD_04pg } from "@/page/Revisor/FCD_04pg";
+
 export default function Router() {
   return (
     <Routes>
@@ -17,6 +20,8 @@ export default function Router() {
         <Route path="Inicio/Formulario_FCD-001" element={<FCD_01pg />} />
          <Route path="Revision" element={<Inicio_RVpg />} /> 
          <Route path="Revision/Tabla_Buzon" element={<Tabla_BuzonPg/>} /> 
+         <Route path="Revision/FCD-02" element={<FCD_02pg />} />
+         <Route path="Revision/FCD-04" element={<FCD_04pg />} />
          <Route path="3" element={<FCD_03pg/>} /> 
       </Route>
     </Routes>

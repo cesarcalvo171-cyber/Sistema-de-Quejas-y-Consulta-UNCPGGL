@@ -1,9 +1,12 @@
+import InformeInvestigacionForm from "@/components/Formularios/InformeInvestigacionForm";
 
-import { FCD_03 } from "@/components/Formularios/FCD-003";
-export function  FCD_03pg () {
+export function FCD_03pg() {
   return (
-    <>
-      <FCD_03/>
-    </>
+    <div className="container mx-auto py-10 px-4">
+      <InformeInvestigacionForm 
+        numeroDenuncia="DEN-2026-0892" 
+        fechaInicio="2026-05-20" 
+      />
+    </div>
   );
-}``
+}
