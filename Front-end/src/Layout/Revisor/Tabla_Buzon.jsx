@@ -20,7 +20,7 @@ import {
   SidebarInset,
 } from "@/components/ui/sidebar";
 import { Abrir_Denuncia } from "@/components/Revison/Abrir_Denuncia";
-import { FCD_02 } from "@/components/Formularios/FCD-02";
+import EvaluacionPreliminarForm from "@/components/Formularios/EvaluacionPreliminarForm";
 export function Tabla_Buzon() {
   const [denuncias, setDenuncias] = useState([]);
 useEffect(() => {
@@ -96,7 +96,7 @@ console.log(denuncias);
                     </TableCell>
 
                     <TableCell className=" px2 font-medium hover:bg-gray-50">
-                      <FCD_02 denunciaId={denuncia.id} />
+                      <EvaluacionPreliminarForm denunciaId={denuncia.id} />
                     </TableCell>
                   </TableRow>
                 ))}
